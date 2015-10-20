@@ -6,7 +6,7 @@
 
 ## Usage
 
-To start, simply copy `throttled_http.js` or `throttled_http_no_goog.js`
+To start, simply copy `throttled_http.js` or `throttled_http_no_closure.js`
 to your code base and add `'yc.throttledHttp'` as a dependency to your
 application module. Example:
 

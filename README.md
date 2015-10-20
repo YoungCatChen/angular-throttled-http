@@ -6,8 +6,9 @@
 
 ## Usage
 
-To start, simply add `'yc.throttledHttp'` as a dependency to your application
-module. Example:
+To start, simply copy `throttled_http.js` or `throttled_http_no_goog.js`
+to your code base and add `'yc.throttledHttp'` as a dependency to your
+application module. Example:
 
     var yourMod = angular.module('yourModule', ['yc.throttledHttp']);
 

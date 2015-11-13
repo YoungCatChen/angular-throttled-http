@@ -126,7 +126,8 @@ yc.throttledHttp.Throttler = function($http, $q, nConnection) {
   /**
    * @private @type {!Array<{
    *   deferred: !angular.$q.Deferred,
-   *   config: !angular.$http.Config
+   *   config: !angular.$http.Config,
+   *   cancelled: boolean
    * }>}
    */
   this.queue_ = [];
@@ -209,7 +210,14 @@ function(names) {
  */
 yc.throttledHttp.Throttler.prototype.issueHttp = function(config) {
   var deferred = this.q_.defer();
-  var item = {deferred: deferred, config: config};
+  var item = {deferred: deferred, config: config, cancelled: false};
+
+  if (config.timeout && config.timeout.finally) {
+    config.timeout.finally(function() {
+      item.cancelled = true;
+    });
+  }
+
   this.queue_.push(item);
   this.dispatch_();
   return deferred.promise;
@@ -225,6 +233,11 @@ yc.throttledHttp.Throttler.prototype.dispatch_ = function() {
 
   this.nOngoing_++;
   var queueItem = this.queue_.shift();
+
+  if (queueItem.cancelled) {
+    this.dispatch_();
+    return;
+  }
 
   this.http_(queueItem.config)
   .finally(function() {
